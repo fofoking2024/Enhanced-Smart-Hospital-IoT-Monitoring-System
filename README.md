@@ -1,6 +1,4 @@
-
-
-markdown
+---
 # 🏥 Enhanced Smart Hospital IoT Monitoring System
 
 An advanced, secure, and real-time Industrial IoT (IIoT) solution designed for monitoring modern hospital environments. Built on a **Zero Trust Architecture**, this system ensures strict patient data privacy, absolute network isolation, and resilient defense against identity spoofing attacks.
