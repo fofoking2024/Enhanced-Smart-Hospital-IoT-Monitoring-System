@@ -1,0 +1,34 @@
+اكتب الأمر التالي لتشغيل خادم Mosquitto:
+>> net start mosquito
+
+تشغيل محرك المعالجة (Node-RED)
+>> node-red
+
+امر تشغيل في vscode
+>> python D:\Enhanced_Smart_Hospital\IoT_Edge_Nodes_02\room_node.py
+
+
+فتح لوحة التحكم (Dashboard) محلياً
+>> http://127.0.0.1:1880/ui
+
+رابط الصفحة 
+>>http://127.0.0.1:1880/#flow/flow1
+
+> python IoT_Edge_Nodes_02/room_node.py
+
+Your Authtoken:
+3BwVoEwBqPosUIbOUBpWE32Y4YK_6nBWHYLwTxK7fRR9gsi4p
+
+ كلمة المرور 
+
+Admin
+Admin123
+
+
+تشغيل السيرفر يدوياً :
+افتح نافذة CMD واكتب الأمر التالي (نسخ ولصق):
+
+"C:\Program Files\mosquitto\mosquitto.exe" -v -c "C:\Program Files\mosquitto\mosquitto.conf"
+
+> net start mosquito
+
