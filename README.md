@@ -1,36 +1,107 @@
+
+markdown
 # 🏥 Enhanced Smart Hospital IoT Monitoring System
 
-An advanced, secure, and real-time IoT solution for monitoring hospital environments, built with a **Zero Trust Architecture** to ensure patient data privacy and system integrity.
+An advanced, secure, and real-time Industrial IoT (IIoT) solution designed for monitoring modern hospital environments. Built on a **Zero Trust Architecture**, this system ensures strict patient data privacy, absolute network isolation, and resilient defense against identity spoofing attacks.
+
+---
 
 ## 📋 Project Overview
-This project simulates a smart hospital environment where 5 independent rooms are monitored for **Temperature** and **Smoke Detection**. It bridges the gap between network simulation (GNS3) and industrial IoT protocols (MQTT).
+In critical healthcare facilities, real-time environmental visibility is non-negotiable. This project implements a comprehensive monitoring framework simulating **5 independent hospital rooms** equipped with **Temperature** and **Smoke/Fire Detection** capabilities. 
 
-## 🏗️ System Architecture (The 5 Layers)
-The system is built on a robust five-layer engineering framework:
-1. **Sensor Simulation Layer:** Python-based edge nodes simulating real-time room data.
-2. **Communication Layer:** Centralized MQTT Broker (Mosquitto) for efficient data flow.
-3. **Security & Identity Layer:** Strict Authentication and **ACL (Access Control Lists)**.
-4. **Processing Layer:** Node-RED flows for data parsing and logic execution.
-5. **Visualization Layer:** Interactive real-time Dashboards for medical staff.
+The core engineering objective is to bridge the gap between virtualized enterprise network infrastructure (**GNS3 / VMware**) and lightweight messaging protocols (**MQTT**), backed by rigorous cybersecurity enforcement using **Access Control Lists (ACL)** and protocol verification via **Wireshark**.
 
-## 🛡️ Key Engineering Features
-- **Zero Trust Security:** No implicit trust. Every node must authenticate.
-- **Data Isolation:** Room 101 cannot access or spoof data for Room 102, enforced via ACL policies.
-- **Cybersecurity Resilience:** Successfully tested against "Identity Spoofing" attacks, verified by **Wireshark** packet analysis.
-- **Forensic Logging:** Automated data archiving in CSV format for medical and technical audits.
+---
 
-## 🛠️ Tech Stack
-- **Programming:** Python (Eclipse Paho MQTT API)
-- **Middleware:** Mosquitto MQTT Broker
-- **Logic & UI:** Node-RED & Node-RED Dashboard
-- **Network Simulation:** GNS3 & VMware Workstation
-- **Analysis:** Wireshark (Packet Sniffing & Protocol Analysis)
+## 🏗️ System Architecture (The 5-Layer Framework)
+
+The system’s design is strictly modular, organized into a decoupled 5-layer architecture to maximize scalability and fault tolerance:
+
+1. **Sensor Simulation Layer (Edge Nodes):** Multithreaded Python scripts simulating independent microcontrollers. Each node encapsulates local sensor trends and internal health telemetry.
+2. **Communication Layer (Transport):** A centralized, high-throughput **Mosquitto MQTT Broker** acting as the message distribution hub.
+3. **Security & Identity Layer (Enforcement):** Strict client authentication combined with topic-level **ACL policies** to prevent cross-room data leakage.
+4. **Processing Layer (Middleware/Logic):** **Node-RED** workspace running custom runtime logic, data extraction, and rule-based parsing.
+5. **Visualization Layer (UI/UX):** An interactive, low-latency web dashboard providing medical and technical staff with real-time analytics and dynamic threshold alerts.
+
+### 🌐 Network & System Topology
+The entire setup is simulated over a virtualized production network. Below is the comprehensive topology mapping the logical placement of edge endpoints, the central broker, the management console, and packet sniffing interfaces:
+
+![System Architecture and Network Topology](Documentaion_05/01_system_topology.png)
+*Figure 1: Comprehensive Network Architecture and Node Topology inside GNS3.*
+
+---
+
+## 💻 Technical Implementation Details
+
+### 1. Python Edge Nodes & Data Stream
+Each room operates an independent Python node powered by the `paho-mqtt` client library. The script samples environmental data, converts it into structured JSON payloads, and streams it asynchronously every 4 seconds.
+
+* **Payload Format:** `{"Room": 101, "Temperature": 24.5, "Smoke_Alarm": 0}`
+
+![Python Sensors Flow](Documentaion_05/02_python_nodes.png)
+*Figure 2: Execution of multithreaded Python sensor nodes and continuous JSON telemetry streaming.*
+
+### 2. Node-RED Core Logic Workspace
+Node-RED ingests raw payloads from subscribed MQTT topics. It extracts specific parameters, triggers immediate logic decisions (e.g., sound fire alarm if `Smoke_Alarm == 1`), and maps numbers seamlessly into visualization nodes.
+
+![Node-RED Workspace Flow](Documentaion_05/03_nodered_workspace.png)
+*Figure 3: Node-RED processing pipeline showing structured flows, interconnecting wires, and active debug messages.*
+
+### 3. Real-time Monitoring Dashboard
+The medical console provides dynamic real-time tracking. Color-coded gauges change behavior under critical thresholds, and history charts display continuous environmental conditions across all 5 wards.
+
+![Real-time Monitoring Dashboard](Documentaion_05/04_hospital_dashboard.png)
+*Figure 4: Production-grade real-time interactive medical monitoring dashboard.*
+
+---
+
+## 🛡️ Cybersecurity & Zero Trust Framework
+
+### 1. Access Control Lists (ACL) Setup
+To enforce strict data privacy, the network follows a **Zero Trust** model. Implicit trust is eliminated. A compromised node in Room 101 must never be able to view or corrupt data in Room 102. This is implemented via a strict, server-side `acl.txt` configuration on the Mosquitto broker, locking down read/write privileges per user.
+
+![ACL Security Configuration](Documentaion_05/05_mosquitto_acl.png)
+*Figure 5: Access Control Lists (ACL) profile enforcing explicit topic isolation on the MQTT Broker.*
+
+### 2. Penetration Testing & Spoofing Mitigation
+To test system resilience, a rogue script (`hack_test.py`) was introduced to mimic an insider threat attempting to inject a fake fire alarm into another room. Thanks to the ACL firewall, the broker immediately blocks the malicious message, drops the unauthorized connection, and shields the dashboard from fake alerts.
+
+![Penetration Test Interception](Documentaion_05/06_attack_mitigation.png)
+*Figure 6: Automated blocking and total evasion of an unauthorized injection attack.*
+
+### 3. Wireshark Network Packet Analysis
+Deep packet inspection was carried out to capture network data frames. Wireshark analysis logs confirm that raw connection requests are monitored and unauthorized subscription queries are cleanly dropped without disclosing critical backend topic hierarchies to the adversary.
+
+![Wireshark Packet Analysis](Documentaion_05/07_wireshark_analysis.png)
+*Figure 7: Protocol verification and cryptographic telemetry mapping using Wireshark.*
+
+---
 
 ## 📁 Repository Structure
-- `IoT_Edge_Nodes_02/`: Python scripts for room simulation and security testing.
-- `Logic_and_Dashboard_03/`: Node-RED flows and MQTT configuration files.
-- `Database_Logs_04/`: Sample archived data and network capture files (.pcapng).
-- `Documentaion_05/`: Technical reports, system topology, and diagrams.
+
+```text
+├── IoT_Edge_Nodes_02/          # Multi-client Python scripts for sensor simulation & exploit scripts
+├── Logic_and_Dashboard_03/     # Node-RED flow configuration files and Mosquitto broker rules
+├── Database_Logs_04/           # Archived CSV data captures and raw Wireshark network logs (.pcapng)
+├── Documentaion_05/            # Technical engineering blueprints, project slides, and high-res system figures
+└── instructions.txt           # Environment deployment and quickstart execution guidelines
+
+```
+
+---
 
 ## 👨‍🔬 Author
-**Engineer Fares Al-Selwi** *Electrical Engineering - Sana'a University*
+
+**Engineer Fares Al-Selwi** *Electrical Engineering - Faculty of Engineering, Sana'a University*
+
+``
+
+
+
+### 🛠️ طريقة التحديث الآن من المتصفح:
+1. اذهب إلى صفحة المستودع الرئيسية على المتصفح (تأكد أنك واقف على الفرع `main`).
+2. اضغط على ملف `README.md` ثم اضغط على أيقونة **القلم (Edit)** لتعديله.
+3. قم بمسح كل الكلام المكتوب حالياً، والتدق بجديدك هذا مكانه.
+4. انزل لأسفل واضغط على زر **Commit changes** الأخضر مباشرة.
+
+بمجرد الحفظ، سيتغير شكل المستودع تماماً ليصبح مرجعاً هندسياً فخماً يفتح النفس! طمني إذا ظهرت كل الصور والفقرات كما يجب.
